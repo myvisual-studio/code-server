@@ -4,6 +4,8 @@ set -eu
 # code-server's automatic install script.
 # See https://github.com/cdr/code-server/blob/master/doc/install.md
 
+GIT_REPO="https://github.com/cdr/code-server"
+
 usage() {
   arg0="$0"
   if [ "$0" = sh ]; then
@@ -67,14 +69,14 @@ Usage:
 
 It will cache all downloaded assets into ~/.cache/code-server
 
-More installation docs are at https://github.com/cdr/code-server/blob/master/doc/install.md
+More installation docs are at $GIT_REPO/blob/master/doc/install.md
 EOF
 }
 
 echo_latest_version() {
   # https://gist.github.com/lukechilds/a83e1d7127b78fef38c2914c4ececc3c#gistcomment-2758860
-  version="$(curl -fsSLI -o /dev/null -w "%{url_effective}" https://github.com/cdr/code-server/releases/latest)"
-  version="${version#https://github.com/cdr/code-server/releases/tag/}"
+  version="$(curl -fsSLI -o /dev/null -w "%{url_effective}" $GIT_REPO/releases/latest)"
+  version="${version#$GIT_REPO/releases/tag/}"
   version="${version#v}"
   echo "$version"
 }
@@ -334,7 +336,7 @@ install_deb() {
   echoh "Installing v$VERSION deb package from GitHub releases."
   echoh
 
-  fetch "https://github.com/cdr/code-server/releases/download/v$VERSION/code-server_${VERSION}_$ARCH.deb" \
+  fetch "$GIT_REPO/releases/download/v$VERSION/code-server_${VERSION}_$ARCH.deb" \
     "$CACHE_DIR/code-server_${VERSION}_$ARCH.deb"
   sudo_sh_c dpkg -i "$CACHE_DIR/code-server_${VERSION}_$ARCH.deb"
 
@@ -345,7 +347,7 @@ install_rpm() {
   echoh "Installing v$VERSION rpm package from GitHub releases."
   echoh
 
-  fetch "https://github.com/cdr/code-server/releases/download/v$VERSION/code-server-$VERSION-$ARCH.rpm" \
+  fetch "$GIT_REPO/releases/download/v$VERSION/code-server-$VERSION-$ARCH.rpm" \
     "$CACHE_DIR/code-server-$VERSION-$ARCH.rpm"
   sudo_sh_c rpm -i "$CACHE_DIR/code-server-$VERSION-$ARCH.rpm"
 
@@ -371,7 +373,7 @@ install_standalone() {
   echoh "Installing standalone release archive v$VERSION from GitHub releases."
   echoh
 
-  fetch "https://github.com/cdr/code-server/releases/download/v$VERSION/code-server-$VERSION-$OS-$ARCH.tar.gz" \
+  fetch "$GIT_REPO/releases/download/v$VERSION/code-server-$VERSION-$OS-$ARCH.tar.gz" \
     "$CACHE_DIR/code-server-$VERSION-$OS-$ARCH.tar.gz"
 
   sh_c="sh_c"
@@ -419,7 +421,7 @@ install_npm() {
   echoh
   echoerr "Please install npm or yarn to install code-server!"
   echoerr "You will need at least node v12 and a few C dependencies."
-  echoerr "See the docs https://github.com/cdr/code-server#yarn-npm"
+  echoerr "See the docs $GIT_REPO#yarn-npm"
   exit 1
 }
 
